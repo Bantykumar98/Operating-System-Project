@@ -1,0 +1,125 @@
+#include<iostream>
+#include<vector>
+#include<conio.h>
+#include<stdlib.h>
+using namespace std;
+vector <int> at,bt,gift,atf,btf,atqu,btqu,ttqu,wtqu,index;
+vector <char> student,studentf,studentqu;
+int temp,flag=0;
+static  int time;
+int giftdistribution()
+{
+gift.clear();
+for(int i=0;i<studentf.size();i++) 
+{
+cout<<"Enter number of gifts "<<studentf[i]<<" is having now: ";
+cin>>temp;
+gift.push_back(temp);
+}
+}
+int minimum_gift()
+{
+int min = 0,min_gift = gift[0];
+for(int i=1;i<gift.size();i++)
+{
+if(gift[i]>min_gift)
+{
+min = i;
+min_gift = gift[i];
+}
+}
+return min;
+}
+void processing(int min)
+{
+temp = (time + btf[min]) - atf[min];
+ttqu.push_back(temp);
+temp = temp - btf[min];
+wtqu.push_back(temp);
+btqu.push_back(btf[min]);
+atqu.push_back(atf[min]);
+studentqu.push_back(studentf[min]);
+system("cls");
+cout<<"Student who done with his/her processing:";
+cout<<studentf[min]<<endl<<endl<<endl;
+time = time + btf[min];
+btf.erase(btf.begin() + min);
+atf.erase(atf.begin() + min);
+studentf.erase(studentf.begin() + min);
+}
+void minarivaltime()
+{
+if(flag==0)
+{
+int temparival = at[0],freq = 1;
+index.push_back(0);
+for(int i=1;i<at.size();i++)
+{
+if(at[i] < temparival)
+{ 
+temparival = at[i];
+index.clear();
+index.push_back(i);
+}
+else if (at[i] == temparival)
+{
+index.push_back(i);
+}
+}
+time = time + at[index.back()];
+flag++;
+}
+else
+{
+index.clear();
+for(int i=0;i<at.size();i++)
+{
+if(at[i]<=time)
+{
+index.push_back(i);
+}
+}
+}
+}
+void queue()
+{
+for(int i=0;i<index.size();i++)
+{
+studentf.push_back(student[index[i]]);
+atf.push_back(at[index[i]]);
+btf.push_back(bt[index[i]]);
+}
+//getch();
+//cout<<"all the students are entered into queue"<<endl;
+//cout<<"soze of indexx array : "<<index.size()<<endl;
+for(int r=index.size()-1;r>-1;r--)
+{
+student.erase(student.begin() + index[r]);
+at.erase(at.begin() + index[r]);
+bt.erase(bt.begin() + index[r]);
+}
+}
+int main()
+{
+for(int i=0;i<10;i++)
+{
+student.push_back(char(i+97)); 
+cout<<"Burst Time of Student "<<student[i]<<" is:";
+cin>>temp;
+bt.push_back(temp);
+cout<<"Arival Time of Student "<<student[i]<<" is:";
+cin>>temp;
+at.push_back(temp);
+}
+for(int k=0;k<10;k++)
+{
+minarivaltime();
+queue();
+giftdistribution();
+processing(minimum_gift());
+}
+for(int j=0;j<10;j++)
+{
+cout<<studentqu[j]<<" "<<atqu[j]<<" "<<btqu[j]<<" "<<ttqu[j]<<" "<<wtqu[j]<<endl;
+}
+} 
